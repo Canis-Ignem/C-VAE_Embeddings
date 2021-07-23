@@ -13,7 +13,7 @@ import torchtext
 
 import io
 import torch
-from torchtext.datasets import WikiText2, WikiText2
+from torchtext.datasets import WikiText103, WikiText2
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import Vocab
 from collections import Counter
@@ -45,13 +45,13 @@ def get_batch(source, i):
 
 def get_data():
 
-    train_iter = WikiText2(split='train')
+    train_iter = WikiText103(split='train')
     counter = Counter()
     for line in train_iter:
         counter.update(tokenizer(line))
     vocab = Vocab(counter)
 
-    train_iter, val_iter, test_iter = WikiText2()
+    train_iter, val_iter, test_iter = WikiText103()
     
     train_data = preprocess(train_iter, vocab)
     val_data = preprocess(val_iter, vocab)
