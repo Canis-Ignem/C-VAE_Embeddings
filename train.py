@@ -31,7 +31,7 @@ for epoch in range(epochs):
     encoder.train()
     decoder.train()
 
-    for batch , i in enumerate(0, train.size(0) - 1 , dh.bptt):
+    for batch , i in enumerate(0, train.size(0) - 1):
         prior = D.Normal(torch.zeros(512, ), torch.ones(512, 512))
         x , y = dh.get_batch(train, i)
         optimizer.zero_grad()
