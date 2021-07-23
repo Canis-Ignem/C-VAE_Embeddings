@@ -10,3 +10,6 @@
 .data/wikitext-103/wiki.train.tokens
 .data/wikitext-103/wiki.valid.tokens
 .data/wikitext-2/wiki.test.tokens
+.data
+__pycache__/
+__pycache__/

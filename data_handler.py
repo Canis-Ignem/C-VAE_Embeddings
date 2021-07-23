@@ -18,7 +18,7 @@ from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import Vocab
 from collections import Counter
 
-btpp = 35
+bptt = 35
 batch_size = 20
 val_batch_size = 10
 tokenizer = get_tokenizer('basic_english')
@@ -30,13 +30,18 @@ def preprocess(iterator, vocab):
 
 
 def to_batches(data, batch_size):
-    
-    n_batch = data.size(0) // batch_size
-    data = data.narrow( 0, 0, n_batch * batch_size )
-    data = data.view( batch_size, -1 ).contigous()
+
+    nbatch = data.size(0) // batch_size
+    data = data.narrow(0, 0, nbatch * batch_size)
+    data = data.view(batch_size, -1).t().contiguous()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     return data.to(device)
-    
+  
+def get_batch(source, i):
+    seq_len = min(bptt, len(source) - 1 - i)
+    data = source[i:i+seq_len]
+    target = source[i+1:i+1+seq_len].reshape(-1)
+    return data, target  
 
 def get_data():
 
@@ -52,11 +57,9 @@ def get_data():
     val_data = preprocess(val_iter, vocab)
     test_data = preprocess(test_iter, vocab)
     
+    train_data = to_batches(train_data, batch_size)
+    val_data = to_batches(val_data, val_batch_size)
+    test_data = to_batches(test_data, val_batch_size)
+    
     return train_data, val_data, test_data, vocab
 
-
-train, val, test, l = get_data()
-
-print(len(l))
-
-print(train[0])

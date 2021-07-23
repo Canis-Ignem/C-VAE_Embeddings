@@ -1,5 +1,5 @@
 #TORCH
-from torch.nn import Linear, ReLU, CrossEntropyLoss, Sequential, Conv1d, MaxPool2d, Module, Softmax, BatchNorm2d, Dropout, LeakyReLU
+from torch.nn import Linear, ReLU, CrossEntropyLoss, Sequential, Conv1d, MaxPool2d, Module, Softmax, BatchNorm2d, Dropout, LeakyReLU, Sigmoid
 from torch import nn
 import torch
 
@@ -22,7 +22,7 @@ class Encoder(Module):
             LeakyReLU(0.1, inplace=True),
             Conv1d(vocab_size//4, vocab_size//8, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//8, z_size, 1, 1)
+            Conv1d(vocab_size//8, z_size*2, 1, 1)
         )
         
     def forward(self, x):
@@ -47,7 +47,8 @@ class Decoder(Module):
             LeakyReLU(0.1, inplace=True),
             Conv1d(vocab_size//4, vocab_size//2, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//2, vocab_size, 1, 4)
+            Conv1d(vocab_size//2, vocab_size, 1, 4),
+            Sigmoid()
         )
         
     def forward(self, x):
@@ -56,9 +57,3 @@ class Decoder(Module):
         x =  x.view(-1, 2, self.vocab_size )
         return x
     
-    
-enc = Encoder(28783, 512)
-dec = Decoder(28783, 512)
-
-print(summary(enc,(28783,1)))
-print(summary(dec,(512,1)))
