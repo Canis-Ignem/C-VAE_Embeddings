@@ -19,7 +19,7 @@ from torchtext.vocab import Vocab
 from collections import Counter
 
 bptt = 35
-batch_size = 20
+batch_size = 1
 val_batch_size = 10
 tokenizer = get_tokenizer('basic_english')
 
@@ -38,10 +38,10 @@ def to_batches(data, batch_size):
     return data.to(device)
   
 def get_batch(source, i):
-    seq_len = min(bptt, len(source) - 1 - i)
+    seq_len = min(1, len(source) - 1 - i)
     data = source[i:i+seq_len]
     target = source[i+1:i+1+seq_len].reshape(-1)
-    return data, target  
+    return data.squeeze(0), target.squeeze(0)
 
 def get_data():
 
@@ -63,3 +63,16 @@ def get_data():
     
     return train_data, val_data, test_data, vocab
 
+'''
+train, val, _, l = get_data()
+x , y = get_batch(train, 0)
+
+input = torch.zeros((batch_size,len(l),1))
+out = torch.zeros((batch_size,len(l),1))
+
+for j in range(batch_size):
+    input[j][x[j]][0] = 1
+    input[j][y[j]][0] = 1
+    print(input[j].shape)
+    print(input[j].shape)
+'''

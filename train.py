@@ -34,16 +34,30 @@ for epoch in range(epochs):
     for i in range(0, train.size(0) - 1):
         prior = D.Normal(torch.zeros(512, ), torch.ones(512, 512))
         x , y = dh.get_batch(train, i)
+        
+        input = torch.zeros( (1,len(l), 1) )
+        output = torch.zeros( (1,len(l), 1) )
+        
+        for j in range(dh.batch_size):
+            input[0][x][0] = 1
+            output[0][y][0] = 1
+            
         optimizer.zero_grad()
         
-        encoded_op = encoder(x) #output statistics for latent space
+        encoded_op = encoder(input) #output statistics for latent space
+        print(encoded_op.shape)
+        
         z_mu = encoded_op[:, 0]
         z_logvar = encoded_op[:, 1]
+        
         reconstruction_loss = 0            #loss for a batch
         epsilon = prior.sample()
+        
         z = z_mu + epsilon * (z_logvar / 2).exp()
-        output_data = decoder(z)
-        reconstruction_loss += F.binary_cross_entropy(output_data, y.detach(), size_average=False)
+        output_data = decoder(z.unsqueeze(2))
+        
+        reconstruction_loss += F.binary_cross_entropy(output_data, output.detach(), size_average=False)
+        
         q = D.Normal(z_mu, (z_logvar / 2).exp())
         kld_loss = D.kl_divergence(q, prior).sum()
         reconstruct_loss += reconstruction_loss.item()
