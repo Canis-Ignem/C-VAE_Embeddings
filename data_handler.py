@@ -34,7 +34,7 @@ def to_batches(data, batch_size):
     nbatch = data.size(0) // batch_size
     data = data.narrow(0, 0, nbatch * batch_size)
     data = data.view(batch_size, -1).t().contiguous()
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu" if torch.cuda.is_available() else "cpu")
     return data.to(device)
   
 def get_batch(source, i):
