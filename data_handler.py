@@ -67,7 +67,7 @@ def get_data():
 train, val, _, l = get_data()
 print(train.max())
 print(len(l))
-print(l["hello"])
+print(l["blue"])
 '''
 x , y = get_batch(train, 0)
 
