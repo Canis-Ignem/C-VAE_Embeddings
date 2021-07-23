@@ -63,8 +63,11 @@ def get_data():
     
     return train_data, val_data, test_data, vocab
 
-'''
+
 train, val, _, l = get_data()
+print(train.max())
+print(len(l))
+'''
 x , y = get_batch(train, 0)
 
 input = torch.zeros((batch_size,len(l),1))
