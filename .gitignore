@@ -1,0 +1,12 @@
+
+.data/wikitext-2/wiki.valid.tokens
+.data/wikitext-2/wiki.train.tokens
+.data/wikitext-2-v1.zip
+.data/ptb.train.txt
+.data/ptb.test.txt
+.data/ptb.valid.txt
+.data/wikitext-103-v1.zip
+.data/wikitext-103/wiki.test.tokens
+.data/wikitext-103/wiki.train.tokens
+.data/wikitext-103/wiki.valid.tokens
+.data/wikitext-2/wiki.test.tokens
