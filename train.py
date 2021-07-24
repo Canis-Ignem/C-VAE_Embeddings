@@ -48,8 +48,8 @@ for epoch in range(epochs):
         encoded_op = encoder(input) #output statistics for latent space
         print(encoded_op.shape)
         
-        z_mu = encoded_op[:, 1]
-        z_logvar = encoded_op[:, 2]
+        z_mu = encoded_op[0, :, 0]
+        z_logvar = encoded_op[0, :, 1]
         
         reconstruction_loss = 0            #loss for a batch
         epsilon = prior.sample()
