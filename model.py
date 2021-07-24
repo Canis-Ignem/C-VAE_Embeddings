@@ -70,7 +70,7 @@ class Encoder(Module):
         self.z_size = z_size
         
         self.encode = Sequential(
-            Conv1d(vocab_size, 64 , 1, 1),
+            Conv1d(vocab_size, 64 , 1, 128),
             LeakyReLU(0.1, inplace=True),
             Conv1d(64, 128, 1, 2),
             LeakyReLU(0.1, inplace=True),
@@ -108,13 +108,10 @@ class Decoder(Module):
             Sigmoid()
         )
         
-    def forward(self, x):
-        print(x.shape)
+    def forward(self, x):    
         x = self.decode(x)
-        print(x.shape)
         x = x.view(-1, self.vocab_size,1)
         return x
-
 '''
 d = Decoder(28782,512).to("cuda")
 
