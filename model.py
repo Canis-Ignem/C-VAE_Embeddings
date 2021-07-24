@@ -42,7 +42,7 @@ class Decoder(Module):
         self.z_size = z_size
         
         self.decode = nn.Sequential(
-            Conv1d(z_size, 64, 1, 1),
+            Conv1d(1, 64, 1, 1),
             LeakyReLU(0.1, inplace=True),
             Conv1d(64, 32, 1, 2),
             LeakyReLU(0.1, inplace=True),
