@@ -17,15 +17,21 @@ lr = 0.00002
 epochs = 5
 
 train, val, _, vocab = dh.get_data()
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Training using: ", device)
+
 encoder = Encoder(len(vocab), 512)
 decoder = Decoder(len(vocab), 512)
+
+encoder = encoder.to(device)
+decoder = encoder.to(device)
 
 best_val_loss = 100
 
 optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = lr, betas=(0.5, 0.999))
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print("Training using: ", device)
+
 for epoch in range(epochs):
     reconstruct_loss = 0    #total reconstruction loss
     kl_loss = 0             #total kl divergence loss
@@ -46,7 +52,7 @@ for epoch in range(epochs):
             
         optimizer.zero_grad()
         
-        encoded_op = encoder(input) 
+        encoded_op = encoder(input.to(device)) 
         #print(encoded_op.shape)
         
         z_mu = encoded_op[0, 0, :]
@@ -61,7 +67,7 @@ for epoch in range(epochs):
         
         z = z_mu + epsilon * (z_logvar / 2).exp()
         #print(z.shape)
-        output_data = decoder(z.unsqueeze(0).unsqueeze(0)).squeeze(0)
+        output_data = decoder(z.unsqueeze(0).unsqueeze(0).to(device)).squeeze(0)
         #print(output_data.shape)
         #print(output.shape)
         reconstruction_loss += F.binary_cross_entropy(output_data, output.detach(), size_average=False)
