@@ -73,7 +73,7 @@ for epoch in range(epochs):
         reconstruction_loss += F.binary_cross_entropy(output_data.to(device), output.detach().to(device), size_average=False)
         
         q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
-        kld_loss = D.kl_divergence(q, prior).sum()
+        kld_loss = D.kl_divergence(q.to("cpu"), prior).sum()
         reconstruct_loss += reconstruction_loss.item()
         kl_loss += kld_loss.item()
         loss = (reconstruction_loss + 2 * kld_loss)        
@@ -127,7 +127,7 @@ for epoch in range(epochs):
                 reconstruction_loss += F.binary_cross_entropy(output_data.squeeze(0).to(device), output.detach().to(device), size_average=False)
                 
                 q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
-                kld_loss = D.kl_divergence(q.to(device), prior.to(device)).sum()
+                kld_loss = D.kl_divergence(q.to("cpu"), prior).sum()
                 val_reconstruct_loss += reconstruction_loss.item()
                 val_kl_loss += kld_loss.item()
                 loss = (reconstruction_loss + 2 * kld_loss)        
