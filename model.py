@@ -16,13 +16,13 @@ class Encoder(Module):
         self.z_size = z_size
         
         self.encode = Sequential(
-            Conv1d(vocab_size, vocab_size//8 , 1, 1),
+            Conv1d(vocab_size, 64 , 1, 1),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//8, vocab_size//4, 1, 2),
+            Conv1d(64, 128, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//4, vocab_size//2, 1, 2),
+            Conv1d(128, 256, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//2, z_size*2, 1, 1)
+            Conv1d(256, z_size*2, 1, 1)
         )
         
         
@@ -43,13 +43,13 @@ class Decoder(Module):
         self.z_size = z_size
         
         self.decode = nn.Sequential(
-            Conv1d(1, vocab_size//2, 1, 1),
+            Conv1d(1, 256, 1, 1),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//2, vocab_size//4, 1, 2),
+            Conv1d(256, 128, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//4, vocab_size//8, 1, 2),
+            Conv1d(128, 64, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//8, vocab_size, 1, 128),
+            Conv1d(64, vocab_size, 1, 256),
             Sigmoid()
         )
         
@@ -58,8 +58,7 @@ class Decoder(Module):
         x = self.decode(x)
         x = x.view(-1, self.vocab_size,1)
         return x
-'''  
+ 
 d = Decoder(28782,512)
 
 print(summary(d,(1,512)))
-'''
