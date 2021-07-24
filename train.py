@@ -72,8 +72,8 @@ for epoch in range(epochs):
         #print(output.shape)
         reconstruction_loss += F.binary_cross_entropy(output_data.to(device), output.detach().to(device), size_average=False)
         
-        q = D.Normal(z_mu, (z_logvar / 2).exp())
-        kld_loss = D.kl_divergence(q, prior).sum()
+        q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
+        kld_loss = D.kl_divergence(q.to(device), prior.to(device)).sum()
         reconstruct_loss += reconstruction_loss.item()
         kl_loss += kld_loss.item()
         loss = (reconstruction_loss + 2 * kld_loss)        
@@ -93,7 +93,7 @@ for epoch in range(epochs):
             
             for i in tqdm(range(0, val.size(0) - 1)):
                 
-                prior = D.Normal(torch.zeros(512, ), torch.ones(512,))
+                prior = D.Normal(torch.zeros(512, ), torch.ones(512,))to(device)
                 x , y = dh.get_batch(val, i)
                 
                 input = torch.zeros( (1,len(vocab), 1) )
@@ -105,7 +105,7 @@ for epoch in range(epochs):
                     
                 optimizer.zero_grad()
                 
-                encoded_op = encoder(input)
+                encoded_op = encoder(input.to(device))
                 
                 #print(encoded_op.shape)
                 
@@ -119,15 +119,15 @@ for epoch in range(epochs):
                 #print(z_mu.shape)
                 #print(z_logvar.shape)
                 
-                z = z_mu + epsilon * (z_logvar / 2).exp()
+                z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
                 #print(z.shape)
-                output_data = decoder(z.unsqueeze(0).unsqueeze(0)).squeeze(0)
+                output_data = decoder( z.unsqueeze(0).unsqueeze(0).to(device) ).squeeze(0)
                 #print(output_data.shape)
                 #print(output.shape)
-                reconstruction_loss += F.binary_cross_entropy(output_data.squeeze(0), output.detach(), size_average=False)
+                reconstruction_loss += F.binary_cross_entropy(output_data.squeeze(0).to(device), output.detach().to(device), size_average=False)
                 
-                q = D.Normal(z_mu, (z_logvar / 2).exp())
-                kld_loss = D.kl_divergence(q, prior).sum()
+                q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
+                kld_loss = D.kl_divergence(q.to(device), prior.to(device)).sum()
                 val_reconstruct_loss += reconstruction_loss.item()
                 val_kl_loss += kld_loss.item()
                 loss = (reconstruction_loss + 2 * kld_loss)        
