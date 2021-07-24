@@ -102,8 +102,11 @@ def validate(epoch, encoder, decoder ):
     tall_tensor[0][tall][0] = 1
     
     print(high_tensor.shape)
-    high_emb = encoder(high_tensor.to(device))
-    tall_emb = encoder(tall_tensor.to(device))
+    high_op = encoder(high_tensor.to(device))
+    tall_op = encoder(tall_tensor.to(device))
+    
+    high_emb = get_embedding(high_op, prior)
+    tall_emb = get_embedding(tall_op, prior)
     print(high_emb.shape)
     print(tall_emb.shape)
     
@@ -138,7 +141,7 @@ def train():
             z_mu = encoded_op[:, 0, :]
             z_logvar = encoded_op[:, 1, :]
             
-            reconstruction_loss = 0            
+                      
             epsilon = prior.sample()
             
             #print(epsilon.shape)
@@ -150,6 +153,7 @@ def train():
             output_data = decoder(z.unsqueeze(1).to(device)).squeeze(0)
             #print(output_data.shape)
             #print(output.shape)
+            reconstruction_loss = 0  
             reconstruction_loss += F.binary_cross_entropy(output_data.to(device), output.to(device), size_average=False)
             
             q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
@@ -166,7 +170,15 @@ def train():
             
             validate(epoch, encoder, decoder)
                 
+
+def get_embedding(encoded_op, prior):
     
-    
+    z_mu = encoded_op[:, 0, :]
+    z_logvar = encoded_op[:, 1, :]         
+    epsilon = prior.sample()
+    z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
+    return z
+
+
 train()
 
