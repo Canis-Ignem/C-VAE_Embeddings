@@ -93,7 +93,7 @@ for epoch in range(epochs):
             
             for i in tqdm(range(0, val.size(0) - 1)):
                 
-                prior = D.Normal(torch.zeros(512, ), torch.ones(512,))to(device)
+                prior = D.Normal(torch.zeros(512, ), torch.ones(512,)).to(device)
                 x , y = dh.get_batch(val, i)
                 
                 input = torch.zeros( (1,len(vocab), 1) )
