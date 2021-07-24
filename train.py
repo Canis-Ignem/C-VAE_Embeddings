@@ -33,7 +33,7 @@ optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr
 
 
 
-def validate(epoch):
+def validate(epoch, encoder, decoder):
     
     best_val_loss = 10000
     val_reconstruct_loss = 0    
@@ -41,9 +41,7 @@ def validate(epoch):
     val_loss = 0 
     
     
-    #encoder = torch.load("./models/encoder.pth")
-    #decoder = torch.load("./models/decoder.pth")
-    '''
+    
     with torch.no_grad():
         
         for i in tqdm(range(0, val.size(0) - 1)):
@@ -93,15 +91,19 @@ def validate(epoch):
             
             torch.save(encoder, "./models/encoder.pth")
             torch.save(decoder, "./models/decoder.pth")
-    '''
+    
     high = vocab["high"]
     tall = vocab["tall"]
     
-    high = torch.zeros( (1,len(vocab), 1) )[0][high][0] = 1
-    tall = torch.zeros( (1,len(vocab), 1) )[0][tall][0] = 1
-    print(high.shape)
-    high_emb = encoder(high) 
-    tall_emb = encoder(tall)
+    high_tensor = torch.zeros( (1,len(vocab), 1) )
+    high_tensor[0][high][0] = 1
+    
+    tall_tensor = torch.zeros( (1,len(vocab), 1) )
+    tall_tensor[0][tall][0] = 1
+    
+    print(high_tensor.shape)
+    high_emb = encoder(high_tensor) 
+    tall_emb = encoder(high_tensor)
     
     print( F.cosine_similarity(high_emb, tall_emb) )
 
@@ -160,7 +162,7 @@ def train():
         if epoch % 2:
             print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {} ".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
-            validate(epoch)
+            validate(epoch, encoder, decoder)
                 
     
     
