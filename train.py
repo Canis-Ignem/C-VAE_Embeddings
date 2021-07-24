@@ -53,13 +53,16 @@ for epoch in range(epochs):
         
         reconstruction_loss = 0            #loss for a batch
         epsilon = prior.sample()
-        print(epsilon.shape)
-        print(z_mu.shape)
-        print(z_logvar.shape)
+        
+        #print(epsilon.shape)
+        #print(z_mu.shape)
+        #print(z_logvar.shape)
+        
         z = z_mu + epsilon * (z_logvar / 2).exp()
         print(z.shape)
         output_data = decoder(z.unsqueeze(2))
-        
+        print(output_data.shape)
+        print(output.shape)
         reconstruction_loss += F.binary_cross_entropy(output_data, output.detach(), size_average=False)
         
         q = D.Normal(z_mu, (z_logvar / 2).exp())
