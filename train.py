@@ -161,7 +161,7 @@ def train():
             train_loss += loss.item()
             optimizer.step()
             
-        if epoch % 1:
+        if epoch % 1 == 0:
             print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {} ".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
             validate(epoch, encoder, decoder)
