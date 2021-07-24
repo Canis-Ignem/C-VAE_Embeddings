@@ -1,3 +1,4 @@
+from torch._C import device
 from model import Encoder, Decoder
 from torchvision import transforms
 import torch.nn.functional as F
@@ -7,33 +8,17 @@ import data_handler as dh
 from tqdm import tqdm
 import torch.nn as nn
 import torchvision
+import argparse
 import torch
 
 
+parser = argparse.ArgumentParser(description="C-VAE")
+parser.add_argument('--data', metavar = 'd', type = str, required = False)
+
+args = vars(parser.parse_args())
 
 
-
-lr = 0.00002
-epochs = 50
-
-train_set, val_set, _, vocab = dh.get_data()
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print("Training using: ", device)
-
-encoder = Encoder(len(vocab), 512)
-decoder = Decoder(len(vocab), 512)
-
-encoder = encoder.to(device)
-decoder = decoder.to(device)
-
-best_val_loss = 100
-
-optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = lr, betas=(0.5, 0.999))
-
-
-
-def validate(epoch, encoder, decoder ):
+def validate(epoch, encoder, decoder, device, val_set, vocab):
     
     best_val_loss = 10000
     val_reconstruct_loss = 0    
@@ -56,8 +41,6 @@ def validate(epoch, encoder, decoder ):
             for j in range(dh.val_batch_size):
                 input[j][x[j]][0] = 1
                 output[j][y[j]][0] = 1
-                
-            optimizer.zero_grad()
             
             encoded_op = encoder(input.to(device)) 
             #print(encoded_op.shape)
@@ -107,12 +90,12 @@ def validate(epoch, encoder, decoder ):
     high_op = encoder(high_tensor.to(device))
     tall_op = encoder(tall_tensor.to(device))
     
-    high_emb = get_embedding(high_op, prior)
-    tall_emb = get_embedding(tall_op, prior)
+    high_emb = get_embedding(high_op, prior, device)
+    tall_emb = get_embedding(tall_op, prior, device)
     print( F.cosine_similarity(high_emb, tall_emb) )
 
 
-def train(epochs = 5):
+def train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs = 5):
     
     
     
@@ -172,10 +155,10 @@ def train(epochs = 5):
         if epoch % 2 == 0:
             print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {}  \n".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
-            validate(epoch, encoder, decoder)
+            validate(epoch, encoder, decoder, device, val_set, vocab)
                 
 
-def get_embedding(encoded_op, prior):
+def get_embedding(encoded_op, prior, device):
     
     z_mu = encoded_op[:, 0, :]
     z_logvar = encoded_op[:, 1, :]         
@@ -183,6 +166,27 @@ def get_embedding(encoded_op, prior):
     z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
     return z
 
+def main():
+    
+    lr = 0.00002
+    epochs = 50
 
-train(epochs = epochs)
+    train_set, val_set, _, vocab = dh.get_data(args['data'])
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("Training using: ", device)
+
+    encoder = Encoder(len(vocab), 512)
+    decoder = Decoder(len(vocab), 512)
+
+    encoder = encoder.to(device)
+    decoder = decoder.to(device)
+
+    best_val_loss = 100
+
+    optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = lr, betas=(0.5, 0.999))
+    
+    train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs = epochs)
+
+if __name__ == '__main__':
+    main()

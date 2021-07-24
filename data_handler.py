@@ -42,22 +42,39 @@ def get_batch(source, i):
     target = source[i+1:i+1+seq_len].reshape(-1)
     return data.squeeze(0), target.squeeze(0)
 
-def get_data():
+def get_data(data_set):
 
-    train_iter = WikiText2(split='train')
-    vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=["<unk>"])
-    vocab.set_default_index(vocab["<unk>"])
+    if data_set == '2':
+        
+        train_iter = WikiText2(split='train')
+        vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=["<unk>"])
+        vocab.set_default_index(vocab["<unk>"])
 
-    train_iter, val_iter, test_iter = WikiText2()
-    
-    train_data = preprocess(train_iter, vocab)
-    val_data = preprocess(val_iter, vocab)
-    test_data = preprocess(test_iter, vocab)
-    
-    train_data = to_batches(train_data, batch_size)
-    val_data = to_batches(val_data, val_batch_size)
-    test_data = to_batches(test_data, val_batch_size)
-    
+        train_iter, val_iter, test_iter = WikiText2()
+        
+        train_data = preprocess(train_iter, vocab)
+        val_data = preprocess(val_iter, vocab)
+        test_data = preprocess(test_iter, vocab)
+        
+        train_data = to_batches(train_data, batch_size)
+        val_data = to_batches(val_data, val_batch_size)
+        test_data = to_batches(test_data, val_batch_size)
+        
+    else:
+        train_iter = WikiText103(split='train')
+        vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=["<unk>"])
+        vocab.set_default_index(vocab["<unk>"])
+
+        train_iter, val_iter, test_iter = WikiText103()
+        
+        train_data = preprocess(train_iter, vocab)
+        val_data = preprocess(val_iter, vocab)
+        test_data = preprocess(test_iter, vocab)
+        
+        train_data = to_batches(train_data, batch_size)
+        val_data = to_batches(val_data, val_batch_size)
+        test_data = to_batches(test_data, val_batch_size)
+        
     return train_data, val_data, test_data, vocab
 
 '''
