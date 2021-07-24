@@ -35,14 +35,14 @@ optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr
 
 def validate(epoch):
     
-    best_val_loss = 100
+    best_val_loss = 10000
     val_reconstruct_loss = 0    
     val_kl_loss = 0             
     val_loss = 0 
     
     
-    encoder = torch.load("./models/encoder.pth")
-    decoder = torch.load("./models/decoder.pth")
+    #encoder = torch.load("./models/encoder.pth")
+    #decoder = torch.load("./models/decoder.pth")
     '''
     with torch.no_grad():
         
@@ -97,9 +97,9 @@ def validate(epoch):
     high = vocab["high"]
     tall = vocab["tall"]
     
-    high = torch.zeros( (1,len(vocab), 1) )[0][high.item()][0] = 1
-    tall = torch.zeros( (1,len(vocab), 1) )[0][tall.item()][0] = 1
-    
+    high = torch.zeros( (1,len(vocab), 1) )[0][high.to('cpu').item()][0] = 1
+    tall = torch.zeros( (1,len(vocab), 1) )[0][tall.to('cpu').item()][0] = 1
+    print(high.shape)
     high_emb = encoder(high) 
     tall_emb = encoder(tall)
     
