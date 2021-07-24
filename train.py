@@ -179,11 +179,13 @@ def main():
     encoder = Encoder(len(vocab), 512)
     decoder = Decoder(len(vocab), 512)
     
-    print(summary(encoder,(1,512)))
-    print(summary(decoder,(1,512)))
-
     encoder = encoder.to(device)
     decoder = decoder.to(device)
+    
+    print(summary(encoder,(len(vocab),1)))
+    print(summary(decoder,(1,512)))
+
+    
 
     optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = args['lr'], betas=(0.5, 0.999))
     
