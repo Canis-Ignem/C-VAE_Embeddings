@@ -20,7 +20,7 @@ from collections import Counter
 
 bptt = 35
 batch_size = 1
-val_batch_size = 10
+val_batch_size = 1
 tokenizer = get_tokenizer('basic_english')
 
 def preprocess(raw_text_iter, vocab):

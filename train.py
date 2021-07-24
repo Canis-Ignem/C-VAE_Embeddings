@@ -52,16 +52,16 @@ for epoch in range(epochs):
         reconstruction_loss = 0            
         epsilon = prior.sample()
         
-        print(epsilon.shape)
-        print(z_mu.shape)
-        print(z_logvar.shape)
+        #print(epsilon.shape)
+        #print(z_mu.shape)
+        #print(z_logvar.shape)
         
         z = z_mu + epsilon * (z_logvar / 2).exp()
-        print(z.shape)
+        #print(z.shape)
         output_data = decoder(z.unsqueeze(0).unsqueeze(0)).squeeze(0)
-        print(output_data.shape)
-        print(output.shape)
-        reconstruction_loss += F.binary_cross_entropy(output_data.squeeze(0), output.detach(), size_average=False)
+        #print(output_data.shape)
+        #print(output.shape)
+        reconstruction_loss += F.binary_cross_entropy(output_data, output.detach(), size_average=False)
         
         q = D.Normal(z_mu, (z_logvar / 2).exp())
         kld_loss = D.kl_divergence(q, prior).sum()
@@ -97,7 +97,8 @@ for epoch in range(epochs):
                 optimizer.zero_grad()
                 
                 encoded_op = encoder(input)
-                print(encoded_op.shape)
+                
+                #print(encoded_op.shape)
                 
                 z_mu = encoded_op[0, 0, :]
                 z_logvar = encoded_op[0, 1, :]
@@ -105,15 +106,15 @@ for epoch in range(epochs):
                 reconstruction_loss = 0            
                 epsilon = prior.sample()
                 
-                print(epsilon.shape)
-                print(z_mu.shape)
-                print(z_logvar.shape)
+                #print(epsilon.shape)
+                #print(z_mu.shape)
+                #print(z_logvar.shape)
                 
                 z = z_mu + epsilon * (z_logvar / 2).exp()
-                print(z.shape)
+                #print(z.shape)
                 output_data = decoder(z.unsqueeze(0).unsqueeze(0)).squeeze(0)
-                print(output_data.shape)
-                print(output.shape)
+                #print(output_data.shape)
+                #print(output.shape)
                 reconstruction_loss += F.binary_cross_entropy(output_data.squeeze(0), output.detach(), size_average=False)
                 
                 q = D.Normal(z_mu, (z_logvar / 2).exp())
