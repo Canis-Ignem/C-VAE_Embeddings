@@ -86,9 +86,10 @@ print(l["blue"])
 
 x , y = get_batch(train, 0)
 
-print(x[0])
-print(x[1])
-print(y[0])
+print(x)
+print(y)
+x , y = get_batch(train, 1)
+print(x)
 
 input = torch.zeros((batch_size,len(l),1))
 out = torch.zeros((batch_size,len(l),1))
