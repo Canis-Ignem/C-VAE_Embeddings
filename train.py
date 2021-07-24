@@ -43,8 +43,8 @@ for epoch in range(epochs):
         prior = D.Normal(torch.zeros(512,).to(device), torch.ones(512,).to(device))
         x , y = dh.get_batch(train, i)
         
-        input = torch.zeros( (1,len(vocab), 1) )
-        output = torch.zeros( (1,len(vocab), 1) )
+        input = torch.zeros( (dh.batch_size,len(vocab), 1) )
+        output = torch.zeros( (dh.batch_size,len(vocab), 1) )
         
         for j in range(dh.batch_size):
             input[j][x][0] = 1
@@ -96,8 +96,8 @@ for epoch in range(epochs):
                 prior = D.Normal(torch.zeros(512, ).to(device), torch.ones(512,).to(device))
                 x , y = dh.get_batch(val, i)
                 
-                input = torch.zeros( (1,len(vocab), 1) )
-                output = torch.zeros( (1,len(vocab), 1) )
+                input = torch.zeros( (dh.batch_size,len(vocab), 1) )
+                output = torch.zeros( (dh.batch_size,len(vocab), 1) )
                 
                 for j in range(dh.batch_size):
                     input[j][x][0] = 1
