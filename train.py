@@ -45,7 +45,7 @@ def validate(epoch, encoder, decoder ):
     with torch.no_grad():
         
         print("VALIDATING: \n \n")
-        for i in tqdm(range(0, val_set.size(0))):
+        for i in tqdm(range(0, val_set.size(0)-1)):
             
             prior = D.Normal(torch.zeros(512, ).to(device), torch.ones(512,).to(device))
             x , y = dh.get_batch(val_set, i)
