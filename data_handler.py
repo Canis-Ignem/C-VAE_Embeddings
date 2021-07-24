@@ -66,6 +66,7 @@ def get_data():
 
 train, val, _, l = get_data()
 print(train.shape)
+print(train.max())
 print(len(l))
 print(l["blue"])
 '''
