@@ -133,7 +133,8 @@ def train(epochs = 5):
             for j in range(dh.batch_size):
                 input[j][x[j]][0] = 1
                 output[j][y[j]][0] = 1
-                
+            
+            print(input.shape)  
             optimizer.zero_grad()
             
             encoded_op = encoder(input.to(device)) 
