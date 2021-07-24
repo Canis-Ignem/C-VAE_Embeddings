@@ -54,6 +54,6 @@ class Decoder(Module):
     def forward(self, x):
         
         x = self.decode(x)
-        x = x.view(-1, 1, self.vocab_size, 1)
+        x = x.view(-1, 1, self.vocab_size)
         return x
     
