@@ -1,6 +1,7 @@
 from torch._C import device
 from model import Encoder, Decoder
 from torchvision import transforms
+from torchsummary import summary
 import torch.nn.functional as F
 import torch.distributions as D
 import torch.optim as optim
@@ -177,6 +178,9 @@ def main():
 
     encoder = Encoder(len(vocab), 512)
     decoder = Decoder(len(vocab), 512)
+    
+    print(summary(encoder,(1,512)))
+    print(summary(decoder,(1,512)))
 
     encoder = encoder.to(device)
     decoder = decoder.to(device)
