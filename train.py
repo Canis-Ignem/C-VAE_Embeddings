@@ -115,16 +115,16 @@ for epoch in range(epochs):
                 reconstruction_loss = 0            
                 epsilon = prior.sample()
                 
-                print(epsilon.shape)
-                print(z_mu.shape)
-                print(z_logvar.shape)
+                #print(epsilon.shape)
+                #print(z_mu.shape)
+                #print(z_logvar.shape)
                 
                 z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
-                print(z.shape)
-                output_data = decoder( z.unsqueeze(0).unsqueeze(0).to(device) ).squeeze(0)
+                #print(z.shape)
+                output_data = decoder( z.unsqueeze(1).to(device) ).squeeze(0)
                 #print(output_data.shape)
                 #print(output.shape)
-                reconstruction_loss += F.binary_cross_entropy(output_data.squeeze(0).to(device), output.detach().to(device), size_average=False)
+                reconstruction_loss += F.binary_cross_entropy(output_data.to(device), output.detach().to(device), size_average=False)
                 
                 q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
                 kld_loss = D.kl_divergence(q, prior).sum()
