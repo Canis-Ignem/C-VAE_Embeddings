@@ -55,6 +55,7 @@ for epoch in range(epochs):
         epsilon = prior.sample()
         
         z = z_mu + epsilon * (z_logvar / 2).exp()
+        print(z.shape)
         output_data = decoder(z.unsqueeze(2))
         
         reconstruction_loss += F.binary_cross_entropy(output_data, output.detach(), size_average=False)

@@ -56,4 +56,6 @@ class Decoder(Module):
         x = self.decode(x)
         x = x.view(-1, 1, self.vocab_size)
         return x
-    
+
+d = Decoder(28782,512)
+print(summary(d, (512,1)))
