@@ -15,8 +15,9 @@ import torch
 lr = 0.00002
 epochs = 5
 
-encoder = Encoder(28783, 512)
-decoder = Decoder(28783, 512)
+train, val, _, vocab = dh.get_data()
+encoder = Encoder(len(vocab), 512)
+decoder = Decoder(len(vocab), 512)
 
 
 train, val, _, l = dh.get_data()
@@ -35,8 +36,8 @@ for epoch in range(epochs):
         prior = D.Normal(torch.zeros(512, ), torch.ones(512, 512))
         x , y = dh.get_batch(train, i)
         
-        input = torch.zeros( (1,len(l), 1) )
-        output = torch.zeros( (1,len(l), 1) )
+        input = torch.zeros( (1,len(vocab), 1) )
+        output = torch.zeros( (1,len(vocab), 1) )
         
         for j in range(dh.batch_size):
             input[0][x][0] = 1
