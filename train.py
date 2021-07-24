@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import torch.distributions as D
 import torch.optim as optim
 import data_handler as dh
+from tqdm import tqdm
 import torch.nn as nn
 import torchvision
 import torch
@@ -19,7 +20,7 @@ train, val, _, vocab = dh.get_data()
 encoder = Encoder(len(vocab), 512)
 decoder = Decoder(len(vocab), 512)
 
-
+best_val_loss = 100
 
 optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = lr, betas=(0.5, 0.999))
 
@@ -30,7 +31,7 @@ for epoch in range(epochs):
     encoder.train()
     decoder.train()
 
-    for i in range(0, train.size(0) - 1):
+    for i in tqdm(range(0, train.size(0) - 1)):
         prior = D.Normal(torch.zeros(512, ), torch.ones(512,))
         x , y = dh.get_batch(train, i)
         
@@ -72,7 +73,7 @@ for epoch in range(epochs):
         train_loss += loss.item()
         optimizer.step()
         
-    if epoch % 1:
+    if epoch % 2:
         print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {} ".format(epoch, train_loss, reconstruct_loss, kl_loss))
         
         # VALIDATION
@@ -82,7 +83,7 @@ for epoch in range(epochs):
             val_kl_loss = 0             
             val_loss = 0 
             
-            for i in range(0, val.size(0) - 1):
+            for i in tqdm(range(0, val.size(0) - 1)):
                 
                 prior = D.Normal(torch.zeros(512, ), torch.ones(512,))
                 x , y = dh.get_batch(val, i)
@@ -124,7 +125,14 @@ for epoch in range(epochs):
                 loss = (reconstruction_loss + 2 * kld_loss)        
                 val_loss += loss.item()
                 optimizer.step()
-            print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {} ".format(epoch, val_loss, val_reconstruct_loss, val_kl_loss))
+            print("Epoch: {} \t val_Loss: {} \t val_reconstruction_loss: {} \t val_KL Loss: \t:  {} ".format(epoch, val_loss, val_reconstruct_loss, val_kl_loss))
+            
+            if best_val_loss > val_loss:
+                best_val_loss = val_loss
+                
+                torch.save(encoder, "./models/encoder.pth")
+                torch.save(decoder, "./models/decoder.pth")
+                
     
     high = vocab("high")
     tall = vocab("tall")
