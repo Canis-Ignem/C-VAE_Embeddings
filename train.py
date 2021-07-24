@@ -53,7 +53,7 @@ def validate(epoch, encoder, decoder ):
             input = torch.zeros( (dh.batch_size,len(vocab), 1) )
             output = torch.zeros( (dh.batch_size,len(vocab), 1) )
             
-            for j in range(dh.batch_size):
+            for j in range(dh.val_batch_size):
                 input[j][x[j]][0] = 1
                 output[j][y[j]][0] = 1
                 
