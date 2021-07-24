@@ -111,7 +111,7 @@ def validate(epoch, encoder, decoder ):
     print( F.cosine_similarity(high_emb, tall_emb) )
 
 
-def train():
+def train(epochs = 5):
     
     for epoch in range(epochs):
         reconstruct_loss = 0    #total reconstruction loss
