@@ -102,8 +102,8 @@ def validate(epoch, encoder, decoder ):
     tall_tensor[0][tall][0] = 1
     
     print(high_tensor.shape)
-    high_emb = encoder(high_tensor) 
-    tall_emb = encoder(high_tensor)
+    high_emb = encoder(high_tensor.to(device)).squeeze(0) 
+    tall_emb = encoder(tall_tensor.to(device))
     
     print( F.cosine_similarity(high_emb, tall_emb) )
 
