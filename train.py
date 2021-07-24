@@ -17,11 +17,12 @@ parser = argparse.ArgumentParser(description="C-VAE")
 parser.add_argument('--data', metavar = 'd', type = str, required = True)
 parser.add_argument('--epochs', metavar = 'e', type = int, required = True)
 parser.add_argument('--lr', metavar = 'l', type = float, required = True)
+parser.add_argument('--size', metavar = 's', type = int, required = True)
 
 args = vars(parser.parse_args())
 
 
-def validate(epoch, encoder, decoder, device, val_set, vocab):
+def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
     
     best_val_loss = 10000
     val_reconstruct_loss = 0    
@@ -35,7 +36,7 @@ def validate(epoch, encoder, decoder, device, val_set, vocab):
         print("VALIDATING: \n")
         for i in tqdm(range(0, val_set.size(0)-1)):
             
-            prior = D.Normal(torch.zeros(512, ).to(device), torch.ones(512,).to(device))
+            prior = D.Normal(torch.zeros(emb_size, ).to(device), torch.ones(emb_size,).to(device))
             x , y = dh.get_batch(val_set, i)
             
             input = torch.zeros( (dh.batch_size,len(vocab), 1) )
@@ -98,7 +99,7 @@ def validate(epoch, encoder, decoder, device, val_set, vocab):
     print( F.cosine_similarity(high_emb, tall_emb) )
 
 
-def train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs = 5):
+def train(optimizer, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = 5):
     
     
     
@@ -111,7 +112,7 @@ def train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs
         print("EPOCH: {}\n".format(epoch))
         for i in tqdm( range(0, train_set.size(0) -1 ) ):
             
-            prior = D.Normal(torch.zeros(512,).to(device), torch.ones(512,).to(device))
+            prior = D.Normal(torch.zeros(emb_size,).to(device), torch.ones(emb_size,).to(device))
             x , y = dh.get_batch(train_set, i)
             
             input = torch.zeros( (dh.batch_size,len(vocab), 1) )
@@ -158,7 +159,7 @@ def train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs
         if epoch % 2 == 0:
             print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {}  \n".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
-            validate(epoch, encoder, decoder, device, val_set, vocab)
+            validate(epoch, encoder, emb_size, decoder, device, val_set, vocab)
                 
 
 def get_embedding(encoded_op, prior, device):
@@ -176,20 +177,22 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Training using: ", device)
 
-    encoder = Encoder(len(vocab), 512)
-    decoder = Decoder(len(vocab), 512)
+    emb_size = args['size']
+    
+    encoder = Encoder(len(vocab), emb_size)
+    decoder = Decoder(len(vocab), emb_size)
     
     encoder = encoder.to(device)
     decoder = decoder.to(device)
     
     print(summary(encoder,(len(vocab),1)))
-    print(summary(decoder,(1,512)))
+    print(summary(decoder,(1,emb_size)))
 
     
 
     optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = args['lr'], betas=(0.5, 0.999))
     
-    train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs = args['epochs'])
+    train(optimizer, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = args['epochs'])
 
 if __name__ == '__main__':
     main()
