@@ -104,7 +104,7 @@ class Decoder(Module):
             LeakyReLU(0.1, inplace=True),
             Conv1d(128, 64, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(64, vocab_size, 1, 1),
+            Conv1d(64, vocab_size, 1, 128),
             Sigmoid()
         )
         
@@ -115,7 +115,8 @@ class Decoder(Module):
         x = x.view(-1, self.vocab_size,1)
         return x
 
- 
+'''
 d = Decoder(28782,512).to("cuda")
 
 print(summary(d,(1,512)))
+'''
