@@ -14,7 +14,7 @@ import torch
 
 
 lr = 0.00002
-epochs = 5
+epochs = 50
 
 train_set, val_set, _, vocab = dh.get_data()
 
@@ -44,7 +44,7 @@ def validate(epoch, encoder, decoder ):
     
     with torch.no_grad():
         
-        print("VALIDATING: \n \n")
+        print("VALIDATING: \n")
         for i in tqdm(range(0, val_set.size(0)-1)):
             
             prior = D.Normal(torch.zeros(512, ).to(device), torch.ones(512,).to(device))
@@ -87,7 +87,7 @@ def validate(epoch, encoder, decoder ):
             loss = (reconstruction_loss + 2 * kld_loss)        
             val_loss += loss.item()
             
-        print("Epoch: {} \t val_Loss: {} \t val_reconstruction_loss: {} \t val_KL Loss: \t:  {} ".format(epoch, val_loss, val_reconstruct_loss, val_kl_loss))
+        print("Epoch: {} \t val_Loss: {} \t val_reconstruction_loss: {} \t val_KL Loss: \t:  {} \n".format(epoch, val_loss, val_reconstruct_loss, val_kl_loss))
         
         if best_val_loss > val_loss:
             best_val_loss = val_loss
@@ -114,13 +114,15 @@ def validate(epoch, encoder, decoder ):
 
 def train(epochs = 5):
     
+    
+    
     for epoch in range(epochs):
         reconstruct_loss = 0    #total reconstruction loss
         kl_loss = 0             #total kl divergence loss
         train_loss = 0          #total train loss(reconstruction + 2*kl loss)
         encoder.train()
         decoder.train()
-
+        print("EPOCH: {}\n".format(epoch))
         for i in tqdm( range(0, train_set.size(0) -1 ) ):
             
             prior = D.Normal(torch.zeros(512,).to(device), torch.ones(512,).to(device))
@@ -168,7 +170,7 @@ def train(epochs = 5):
             optimizer.step()
             
         if epoch % 2 == 0:
-            print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {} ".format(epoch, train_loss, reconstruct_loss, kl_loss))
+            print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {}  \n".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
             validate(epoch, encoder, decoder)
                 
