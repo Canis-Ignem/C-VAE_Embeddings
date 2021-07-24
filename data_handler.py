@@ -44,11 +44,11 @@ def get_batch(source, i):
 
 def get_data():
 
-    train_iter = WikiText103(split='train')
+    train_iter = WikiText2(split='train')
     vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=["<unk>"])
     vocab.set_default_index(vocab["<unk>"])
 
-    train_iter, val_iter, test_iter = WikiText103()
+    train_iter, val_iter, test_iter = WikiText2()
     
     train_data = preprocess(train_iter, vocab)
     val_data = preprocess(val_iter, vocab)
