@@ -47,16 +47,16 @@ for epoch in range(epochs):
         output = torch.zeros( (1,len(vocab), 1) )
         
         for j in range(dh.batch_size):
-            input[0][x][0] = 1
-            output[0][y][0] = 1
+            input[j][x][0] = 1
+            output[j][y][0] = 1
             
         optimizer.zero_grad()
         
         encoded_op = encoder(input.to(device)) 
         #print(encoded_op.shape)
         
-        z_mu = encoded_op[0, 0, :]
-        z_logvar = encoded_op[0, 1, :]
+        z_mu = encoded_op[:, 0, :]
+        z_logvar = encoded_op[:, 1, :]
         
         reconstruction_loss = 0            
         epsilon = prior.sample()
