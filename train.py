@@ -97,8 +97,8 @@ def validate(epoch):
     high = vocab["high"]
     tall = vocab["tall"]
     
-    high = torch.zeros( (1,len(vocab), 1) )[0][high.to('cpu').item()][0] = 1
-    tall = torch.zeros( (1,len(vocab), 1) )[0][tall.to('cpu').item()][0] = 1
+    high = torch.zeros( (1,len(vocab), 1) )[0][high.to('cpu')][0] = 1
+    tall = torch.zeros( (1,len(vocab), 1) )[0][tall.to('cpu')][0] = 1
     print(high.shape)
     high_emb = encoder(high) 
     tall_emb = encoder(tall)
