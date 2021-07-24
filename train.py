@@ -25,7 +25,7 @@ encoder = Encoder(len(vocab), 512)
 decoder = Decoder(len(vocab), 512)
 
 encoder = encoder.to(device)
-decoder = encoder.to(device)
+decoder = decoder.to(device)
 
 best_val_loss = 100
 
@@ -66,10 +66,10 @@ for epoch in range(epochs):
         #print(z_logvar.shape)
         
         z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
-        print(z.shape)
+        #print(z.shape)
         output_data = decoder(z.unsqueeze(0).unsqueeze(0).to(device)).squeeze(0)
-        print(output_data.shape)
-        print(output.shape)
+        #print(output_data.shape)
+        #print(output.shape)
         reconstruction_loss += F.binary_cross_entropy(output_data.to(device), output.detach().to(device), size_average=False)
         
         q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
