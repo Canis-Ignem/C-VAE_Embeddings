@@ -16,13 +16,13 @@ class Encoder(Module):
         self.z_size = z_size
         
         self.encode = Sequential(
-            Conv1d(vocab_size, vocab_size//8 , 1, 1),
+            Conv1d(vocab_size, 16 , 1, 1),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//8, vocab_size//4, 1, 2),
+            Conv1d(16, 32, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//4, vocab_size//2, 1, 2),
+            Conv1d(32, 64, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//2, z_size*2, 1, 1)
+            Conv1d(64, z_size*2, 1, 1)
         )
         
         
@@ -42,13 +42,13 @@ class Decoder(Module):
         self.z_size = z_size
         
         self.decode = nn.Sequential(
-            Conv1d(z_size, vocab_size//2, 1, 1),
+            Conv1d(z_size, 64, 1, 1),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//2, vocab_size//4, 1, 2),
+            Conv1d(64, 32, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//4, vocab_size//8, 1, 2),
+            Conv1d(32, 16, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(vocab_size//8, 1, 1, 4),
+            Conv1d(16, 1, 1, 4),
             Sigmoid()
         )
         
