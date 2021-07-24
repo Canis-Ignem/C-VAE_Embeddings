@@ -13,9 +13,9 @@ import torch
 
 
 parser = argparse.ArgumentParser(description="C-VAE")
-parser.add_argument('--data', metavar = 'd', type = str, required = False)
-parser.add_argument('--epochs', metavar = 'e', type = int, required = False)
-parser.add_argument('--lr', metavar = 'l', type = float, required = False)
+parser.add_argument('--data', metavar = 'd', type = str, required = True)
+parser.add_argument('--epochs', metavar = 'e', type = int, required = True)
+parser.add_argument('--lr', metavar = 'l', type = float, required = True)
 
 args = vars(parser.parse_args())
 
