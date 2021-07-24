@@ -70,7 +70,7 @@ for epoch in range(epochs):
         output_data = decoder(z.unsqueeze(1).to(device)).squeeze(0)
         #print(output_data.shape)
         #print(output.shape)
-        reconstruction_loss += F.binary_cross_entropy(output_data.to(device), output.squeeze(0).to(device), size_average=False)
+        reconstruction_loss += F.binary_cross_entropy(output_data.squeeze(1).to(device), output.to(device), size_average=False)
         
         q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
         kld_loss = D.kl_divergence(q, prior).sum()
