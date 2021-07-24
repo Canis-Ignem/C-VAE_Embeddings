@@ -93,7 +93,7 @@ print(y[0])
 input = torch.zeros((batch_size,len(l),1))
 out = torch.zeros((batch_size,len(l),1))
 
-for j in range(batch_size):
+for j in range(1):
     input[j][x[j]][0] = 1
     out[j][y[j]][0] = 1
     print(input[j].shape)
