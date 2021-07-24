@@ -53,7 +53,7 @@ for epoch in range(epochs):
         
         reconstruction_loss = 0            #loss for a batch
         epsilon = prior.sample()
-        print(encoded_op.shape)
+        print(epsilon.shape)
         print(z_mu.shape)
         print(z_logvar.shape)
         z = z_mu + epsilon * (z_logvar / 2).exp()
