@@ -41,7 +41,7 @@ class Decoder(Module):
         self.z_size = z_size
         
         self.decode = nn.Sequential(
-            Conv1d(z_size, vocab_size//8, 1, 1),
+            Conv1d(1, vocab_size//8, 1, 1),
             LeakyReLU(0.1, inplace=True),
             Conv1d(vocab_size//8, vocab_size//4, 1, 2),
             LeakyReLU(0.1, inplace=True),

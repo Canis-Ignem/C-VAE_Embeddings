@@ -33,7 +33,7 @@ for epoch in range(epochs):
     decoder.train()
 
     for i in range(0, train.size(0) - 1):
-        prior = D.Normal(torch.zeros(512, ), torch.ones(512, 512))
+        prior = D.Normal(torch.zeros(512, ), torch.ones(512,))
         x , y = dh.get_batch(train, i)
         
         input = torch.zeros( (1,len(vocab), 1) )
@@ -54,9 +54,9 @@ for epoch in range(epochs):
         reconstruction_loss = 0            #loss for a batch
         epsilon = prior.sample()
         
-        #print(epsilon.shape)
-        #print(z_mu.shape)
-        #print(z_logvar.shape)
+        print(epsilon.shape)
+        print(z_mu.shape)
+        print(z_logvar.shape)
         
         z = z_mu + epsilon * (z_logvar / 2).exp()
         print(z.shape)
