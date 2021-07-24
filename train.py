@@ -100,8 +100,8 @@ for epoch in range(epochs):
                 output = torch.zeros( (1,len(vocab), 1) )
                 
                 for j in range(dh.batch_size):
-                    input[0][x][0] = 1
-                    output[0][y][0] = 1
+                    input[j][x][0] = 1
+                    output[j][y][0] = 1
                     
                 optimizer.zero_grad()
                 
@@ -109,18 +109,18 @@ for epoch in range(epochs):
                 
                 #print(encoded_op.shape)
                 
-                z_mu = encoded_op[0, 0, :]
-                z_logvar = encoded_op[0, 1, :]
+                z_mu = encoded_op[:, 0, :]
+                z_logvar = encoded_op[:, 1, :]
                 
                 reconstruction_loss = 0            
                 epsilon = prior.sample()
                 
-                #print(epsilon.shape)
-                #print(z_mu.shape)
-                #print(z_logvar.shape)
+                print(epsilon.shape)
+                print(z_mu.shape)
+                print(z_logvar.shape)
                 
                 z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
-                #print(z.shape)
+                print(z.shape)
                 output_data = decoder( z.unsqueeze(0).unsqueeze(0).to(device) ).squeeze(0)
                 #print(output_data.shape)
                 #print(output.shape)
@@ -142,8 +142,8 @@ for epoch in range(epochs):
                 torch.save(decoder, "./models/decoder.pth")
                 
     
-    high = vocab("high")
-    tall = vocab("tall")
+    high = vocab["high"]
+    tall = vocab["tall"]
     
     high = torch.zeros( (1,len(vocab), 1) )[0][high][0] = 1
     tall = torch.zeros( (1,len(vocab), 1) )[0][tall][0] = 1
