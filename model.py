@@ -109,7 +109,7 @@ class Decoder(Module):
         )
         
     def forward(self, x):
-        
+        print(x.shape)
         x = self.decode(x)
         print(x.shape)
         x = x.view(-1, self.vocab_size,1)
