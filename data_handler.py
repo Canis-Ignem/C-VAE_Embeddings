@@ -13,10 +13,9 @@ import torchtext
 
 import io
 import torch
-from torchtext.vocab import build_vocab_from_iterator
 from torchtext.datasets import WikiText103, WikiText2
 from torchtext.data.utils import get_tokenizer
-from torchtext.vocab import Vocab
+from torchtext.vocab import build_vocab_from_iterator
 from collections import Counter
 
 bptt = 35
@@ -24,10 +23,9 @@ batch_size = 1
 val_batch_size = 10
 tokenizer = get_tokenizer('basic_english')
 
-def preprocess(iterator, vocab):
-    
-    data = [torch.tensor([vocab[token] for token in tokenizer(item) ], dtype=torch.long ) for item in iterator]
-    return torch.cat( tuple( filter( lambda t: t.numel() > 0, data ) ) )
+def preprocess(raw_text_iter, vocab):
+    data = [torch.tensor(vocab(tokenizer(item)), dtype=torch.long) for item in raw_text_iter]
+    return torch.cat(tuple(filter(lambda t: t.numel() > 0, data)))
 
 
 def to_batches(data, batch_size):
@@ -46,14 +44,9 @@ def get_batch(source, i):
 
 def get_data():
 
-    
-    train_iter = WikiText2( split='train')
+    train_iter = WikiText2(split='train')
     vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=["<unk>"])
     vocab.set_default_index(vocab["<unk>"])
-    counter = Counter()
-    for line in train_iter:
-        counter.update(tokenizer(line))
-    vocab = Vocab(counter)
 
     train_iter, val_iter, test_iter = WikiText2()
     
