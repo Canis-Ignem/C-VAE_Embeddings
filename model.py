@@ -116,6 +116,6 @@ class Decoder(Module):
         return x
 
  
-d = Decoder(28782,512)
+d = Decoder(28782,512).to("cpu")
 
 print(summary(d,(1,512)))
