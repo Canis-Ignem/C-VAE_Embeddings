@@ -54,8 +54,8 @@ def validate(epoch, encoder, decoder ):
             output = torch.zeros( (dh.batch_size,len(vocab), 1) )
             
             for j in range(dh.batch_size):
-                input[j][x][0] = 1
-                output[j][y][0] = 1
+                input[j][x[j]][0] = 1
+                output[j][y[j]][0] = 1
                 
             optimizer.zero_grad()
             
@@ -121,7 +121,7 @@ def train(epochs = 5):
         encoder.train()
         decoder.train()
 
-        for i in tqdm(range(0, train_set.size(0))):
+        for i in tqdm( range(0, train_set.size(0) -1 ) ):
             
             prior = D.Normal(torch.zeros(512,).to(device), torch.ones(512,).to(device))
             x , y = dh.get_batch(train_set, i)
@@ -134,7 +134,6 @@ def train(epochs = 5):
                 input[j][x[j]][0] = 1
                 output[j][y[j]][0] = 1
             
-            print(input.shape)  
             optimizer.zero_grad()
             
             encoded_op = encoder(input.to(device)) 
