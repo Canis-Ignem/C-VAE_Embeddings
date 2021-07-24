@@ -58,7 +58,8 @@ class Decoder(Module):
         print(x.shape)
         x = x.view(-1, 1, self.vocab_size,1)
         return x
-    
+'''  
 d = Decoder(28782,512)
 
 print(summary(d,(1,512)))
+'''
