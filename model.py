@@ -117,4 +117,4 @@ class Decoder(Module):
  
 d = Decoder(28782,512)
 
-print(summary(d,(1,512)))
+print(summary(d,(1,20,512)))
