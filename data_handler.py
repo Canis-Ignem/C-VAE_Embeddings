@@ -77,7 +77,7 @@ def get_data(data_set):
         
     return train_data, val_data, test_data, vocab
 
-
+'''
 train, val, _, l = get_data('2')
 print(train.shape)
 print(train.max())
@@ -99,3 +99,4 @@ for j in range(1):
     out[j][y[j]][0] = 1
     print(input[j].shape)
     print(input[j].shape)
+'''
