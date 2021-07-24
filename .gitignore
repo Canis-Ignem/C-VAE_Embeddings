@@ -13,3 +13,5 @@
 .data
 __pycache__/
 __pycache__/
+wikitext-2/wiki.test.tokens
+*.tokens

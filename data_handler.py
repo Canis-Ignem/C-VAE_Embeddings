@@ -13,6 +13,7 @@ import torchtext
 
 import io
 import torch
+from torchtext.vocab import build_vocab_from_iterator
 from torchtext.datasets import WikiText103, WikiText2
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import Vocab
@@ -45,7 +46,10 @@ def get_batch(source, i):
 
 def get_data():
 
-    train_iter = WikiText2(root=".data/wikitext-2" ,split='train')
+    
+    train_iter = WikiText2( split='train')
+    vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=["<unk>"])
+    vocab.set_default_index(vocab["<unk>"])
     counter = Counter()
     for line in train_iter:
         counter.update(tokenizer(line))
