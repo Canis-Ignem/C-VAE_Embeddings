@@ -166,5 +166,5 @@ def train():
                 
     
     
-validate(0)
+train()
 
