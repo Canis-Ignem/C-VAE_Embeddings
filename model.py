@@ -5,6 +5,60 @@ import torch
 
 #UTILS
 from torchsummary import summary
+'''
+class Encoder(Module):
+    
+    def __init__(self, vocab_size, z_size):
+        
+        super(Encoder, self).__init__()
+        
+        self.vocab_size = vocab_size
+        self.z_size = z_size
+        
+        self.encode = Sequential(
+            Conv1d(vocab_size, 16 , 1, 1),
+            LeakyReLU(0.1, inplace=True),
+            Conv1d(16, 32, 1, 2),
+            LeakyReLU(0.1, inplace=True),
+            Conv1d(32, 64, 1, 2),
+            LeakyReLU(0.1, inplace=True),
+            Conv1d(64, z_size*2, 1, 1)
+        )
+        
+        
+    def forward(self, x):
+        
+        x = self.encode(x)
+        x =  x.view(-1, 2, self.z_size )
+        return x
+    
+class Decoder(Module):
+    
+    def __init__(self, vocab_size, z_size):
+        
+        super(Decoder, self).__init__()
+        
+        self.vocab_size = vocab_size
+        self.z_size = z_size
+        
+        self.decode = nn.Sequential(
+            Conv1d(1, 64, 1, 1),
+            LeakyReLU(0.1, inplace=True),
+            Conv1d(64, 32, 1, 2),
+            LeakyReLU(0.1, inplace=True),
+            Conv1d(32, 64, 1, 2),
+            LeakyReLU(0.1, inplace=True),
+            Conv1d(64, vocab_size, 1, 128),
+            Sigmoid()
+        )
+        
+    def forward(self, x):
+        
+        x = self.decode(x)
+        x = x.view(-1, self.vocab_size,1)
+        return x
+    
+'''
 
 class Encoder(Module):
     
@@ -32,7 +86,8 @@ class Encoder(Module):
         x = self.encode(x)
         x =  x.view(-1, 2, self.z_size )
         return x
-    
+
+
 class Decoder(Module):
     
     def __init__(self, vocab_size, z_size):
@@ -58,7 +113,9 @@ class Decoder(Module):
         x = self.decode(x)
         x = x.view(-1, self.vocab_size,1)
         return x
- 
+
+'''  
 d = Decoder(28782,512)
 
-print(summary(d,(1,20,512)))
+print(summary(d,(1,512)))
+'''
