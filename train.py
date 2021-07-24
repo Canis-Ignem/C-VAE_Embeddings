@@ -14,6 +14,8 @@ import torch
 
 parser = argparse.ArgumentParser(description="C-VAE")
 parser.add_argument('--data', metavar = 'd', type = str, required = False)
+parser.add_argument('--epochs', metavar = 'e', type = int, required = False)
+parser.add_argument('--lr', metavar = 'l', type = float, required = False)
 
 args = vars(parser.parse_args())
 
@@ -168,9 +170,6 @@ def get_embedding(encoded_op, prior, device):
 
 def main():
     
-    lr = 0.00002
-    epochs = 50
-
     train_set, val_set, _, vocab = dh.get_data(args['data'])
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -182,11 +181,9 @@ def main():
     encoder = encoder.to(device)
     decoder = decoder.to(device)
 
-    best_val_loss = 100
-
-    optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = lr, betas=(0.5, 0.999))
+    optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = args['lr'], betas=(0.5, 0.999))
     
-    train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs = epochs)
+    train(optimizer, device, encoder, decoder, train_set, val_set, vocab, epochs = args['epochs'])
 
 if __name__ == '__main__':
     main()
