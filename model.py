@@ -49,7 +49,7 @@ class Decoder(Module):
             LeakyReLU(0.1, inplace=True),
             Conv1d(128, 64, 1, 2),
             LeakyReLU(0.1, inplace=True),
-            Conv1d(64, vocab_size, 1, 256),
+            Conv1d(64, vocab_size, 1, 1),
             Sigmoid()
         )
         
@@ -61,4 +61,4 @@ class Decoder(Module):
  
 d = Decoder(28782,512)
 
-print(summary(d,(1,512)))
+print(summary(d,(1,20,512)))
