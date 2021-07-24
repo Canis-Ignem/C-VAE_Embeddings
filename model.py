@@ -111,10 +111,11 @@ class Decoder(Module):
     def forward(self, x):
         
         x = self.decode(x)
+        print(x.shape)
         x = x.view(-1, self.vocab_size,1)
         return x
 
  
 d = Decoder(28782,512)
 
-print(summary(d,(1,20,512)))
+print(summary(d,(1,512)))
