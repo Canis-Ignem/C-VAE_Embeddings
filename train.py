@@ -44,7 +44,7 @@ for epoch in range(epochs):
         optimizer.zero_grad()
         
         encoded_op = encoder(input) 
-        print(encoded_op.shape)
+        #print(encoded_op.shape)
         
         z_mu = encoded_op[0, 0, :]
         z_logvar = encoded_op[0, 1, :]
