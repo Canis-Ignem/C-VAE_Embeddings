@@ -102,8 +102,10 @@ def validate(epoch, encoder, decoder ):
     tall_tensor[0][tall][0] = 1
     
     print(high_tensor.shape)
-    high_emb = encoder(high_tensor.to(device)).squeeze(0) 
+    high_emb = encoder(high_tensor.to(device))
     tall_emb = encoder(tall_tensor.to(device))
+    print(high_emb.shape)
+    print(tall_emb.shape)
     
     print( F.cosine_similarity(high_emb, tall_emb) )
 
@@ -159,7 +161,7 @@ def train():
             train_loss += loss.item()
             optimizer.step()
             
-        if epoch % 2:
+        if epoch % 1:
             print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {} ".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
             validate(epoch, encoder, decoder)
