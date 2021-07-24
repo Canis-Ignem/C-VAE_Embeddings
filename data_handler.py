@@ -45,7 +45,7 @@ def get_batch(source, i):
 
 def get_data():
 
-    train_iter = WikiText2(split='train')
+    train_iter = WikiText2(root=".data/wikitext-2" ,split='train')
     counter = Counter()
     for line in train_iter:
         counter.update(tokenizer(line))
@@ -65,7 +65,7 @@ def get_data():
 
 
 train, val, _, l = get_data()
-print(train.max())
+print(train.shape)
 print(len(l))
 print(l["blue"])
 '''
