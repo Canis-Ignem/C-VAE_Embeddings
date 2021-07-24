@@ -24,7 +24,7 @@ best_val_loss = 100
 
 optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = lr, betas=(0.5, 0.999))
 
-device = torch.device("gpu" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Training using: ", device)
 for epoch in range(epochs):
     reconstruct_loss = 0    #total reconstruction loss
