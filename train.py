@@ -16,7 +16,7 @@ import torch
 lr = 0.00002
 epochs = 5
 
-train, val, _, vocab = dh.get_data()
+train_set, val_set, _, vocab = dh.get_data()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Training using: ", device)
@@ -33,7 +33,7 @@ optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr
 
 
 
-def validate(epoch, encoder, decoder):
+def validate(epoch, encoder, decoder ):
     
     best_val_loss = 10000
     val_reconstruct_loss = 0    
@@ -44,10 +44,10 @@ def validate(epoch, encoder, decoder):
     
     with torch.no_grad():
         
-        for i in tqdm(range(0, val.size(0)//100)):
+        for i in tqdm(range(0, val_set.size(0)//100)):
             
             prior = D.Normal(torch.zeros(512, ).to(device), torch.ones(512,).to(device))
-            x , y = dh.get_batch(val, i)
+            x , y = dh.get_batch(val_set, i)
             
             input = torch.zeros( (dh.batch_size,len(vocab), 1) )
             output = torch.zeros( (dh.batch_size,len(vocab), 1) )
@@ -117,9 +117,9 @@ def train():
         encoder.train()
         decoder.train()
 
-        for i in tqdm(range(0, train.size(0)//100)):
+        for i in tqdm(range(0, train_set.size(0)//100)):
             prior = D.Normal(torch.zeros(512,).to(device), torch.ones(512,).to(device))
-            x , y = dh.get_batch(train, i)
+            x , y = dh.get_batch(train_set, i)
             
             input = torch.zeros( (dh.batch_size,len(vocab), 1) )
             output = torch.zeros( (dh.batch_size,len(vocab), 1) )
