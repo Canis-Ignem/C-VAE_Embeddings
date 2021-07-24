@@ -19,8 +19,8 @@ from torchtext.vocab import build_vocab_from_iterator
 from collections import Counter
 
 bptt = 35
-batch_size = 1000
-val_batch_size = 500
+batch_size = 100
+val_batch_size = 50
 tokenizer = get_tokenizer('basic_english')
 
 def preprocess(raw_text_iter, vocab):
