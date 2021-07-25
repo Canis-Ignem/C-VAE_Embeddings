@@ -144,7 +144,7 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             #print(output_data.shape)
             #print(output.shape)
              
-            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.to(device), size_average=False)
+            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.to(device), reduction='sum')
             reconstruct_loss += reconstruction_loss.item()
             
             #print((z_logvar / 2).exp().to(device))
