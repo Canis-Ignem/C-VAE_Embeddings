@@ -71,17 +71,17 @@ class Encoder(Module):
         
         self.encode = Sequential(
             Conv1d(vocab_size, 64 , 1, 128),
-            LeakyReLU(0.1, inplace=True),
             Dropout(0.8, inplace=True ),
             BatchNorm1d(64),
-            Conv1d(64, 128, 1, 2),
             LeakyReLU(0.1, inplace=True),
+            Conv1d(64, 128, 1, 2),
             Dropout(0.8, inplace=True ),
             BatchNorm1d(128),
-            Conv1d(128, 256, 1, 2),
             LeakyReLU(0.1, inplace=True),
+            Conv1d(128, 256, 1, 2),
             Dropout(0.8, inplace=True ),
             BatchNorm1d(256),
+            LeakyReLU(0.1, inplace=True),
             Conv1d(256, z_size*2, 1, 1)
         )
         
@@ -105,17 +105,17 @@ class Decoder(Module):
         
         self.decode = nn.Sequential(
             Conv1d(1, 256, 1, 1),
-            LeakyReLU(0.1, inplace=True),
             Dropout(0.8, inplace=True ),
             BatchNorm1d(256),
-            Conv1d(256, 128, 1, 2),
             LeakyReLU(0.1, inplace=True),
+            Conv1d(256, 128, 1, 2),
             Dropout(0.8, inplace=True ),
             BatchNorm1d(128),
-            Conv1d(128, 64, 1, 2),
             LeakyReLU(0.1, inplace=True),
+            Conv1d(128, 64, 1, 2),
             Dropout(0.8, inplace=True ),
             BatchNorm1d(64),
+            LeakyReLU(0.1, inplace=True),
             Conv1d(64, vocab_size, 1, 128),
             Sigmoid()
         )
