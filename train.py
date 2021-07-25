@@ -14,10 +14,10 @@ import torch
 
 
 parser = argparse.ArgumentParser(description="C-VAE")
-parser.add_argument('--data', metavar = 'd', type = str, required = True)
-parser.add_argument('--epochs', metavar = 'e', type = int, required = True)
-parser.add_argument('--lr', metavar = 'l', type = float, required = True)
-parser.add_argument('--size', metavar = 's', type = int, required = True)
+parser.add_argument('--data', metavar = 'd', type = str, required = False, default='2')
+parser.add_argument('--epochs', metavar = 'e', type = int, required = False, default= 100)
+parser.add_argument('--lr', metavar = 'l', type = float, required = False, default= 1)
+parser.add_argument('--size', metavar = 's', type = int, required = False, default= 512)
 
 args = vars(parser.parse_args())
 
@@ -99,7 +99,7 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
     print( F.cosine_similarity(high_emb, tall_emb) )
 
 
-def train(optimizer, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = 5):
+def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = 5):
     
     
     
@@ -156,6 +156,8 @@ def train(optimizer, device, emb_size, encoder, decoder, train_set, val_set, voc
             
             optimizer.step()
             
+        scheduler.step()    
+        
         if epoch % 2 == 0:
             print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {}  \n".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
@@ -191,8 +193,9 @@ def main():
     
 
     optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = args['lr'], betas=(0.5, 0.999))
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.95)
     
-    train(optimizer, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = args['epochs'])
+    train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = args['epochs'])
 
 if __name__ == '__main__':
     main()
