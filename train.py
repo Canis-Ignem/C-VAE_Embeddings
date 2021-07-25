@@ -134,11 +134,13 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             
             #print(epsilon.shape)
             #print(z_mu.shape)
-            #print(z_logvar.shape)
+            print(z_logvar.shape)
+            print(type(z_logvar))
             
             z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
             #print(z.shape)
             
+            q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
             output_data = decoder(z.unsqueeze(1).to(device)).squeeze(0)
             #print(output_data.shape)
             #print(output.shape)
