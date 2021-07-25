@@ -16,7 +16,7 @@ import torch
 parser = argparse.ArgumentParser(description="C-VAE")
 parser.add_argument('--data', metavar = 'd', type = str, required = False, default='2')
 parser.add_argument('--epochs', metavar = 'e', type = int, required = False, default= 100)
-parser.add_argument('--lr', metavar = 'l', type = float, required = False, default= 1.0)
+parser.add_argument('--lr', metavar = 'l', type = float, required = False, default= 0.05)
 parser.add_argument('--size', metavar = 's', type = int, required = False, default= 512)
 
 args = vars(parser.parse_args())
