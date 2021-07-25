@@ -64,7 +64,7 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
             #print(output_data.shape)
             #print(output.shape)
             
-            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.detach().to(device), size_average=False)
+            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.detach().to(device), reduction='sum')
             val_reconstruct_loss += reconstruction_loss.item()
             
             q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
