@@ -24,7 +24,7 @@ args = vars(parser.parse_args())
 
 def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
     
-    best_val_loss = 1000000
+    best_val_loss = 10000000
     val_reconstruct_loss = 0    
     val_kl_loss = 0             
     val_loss = 0 
