@@ -87,14 +87,14 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
         if best_re_loss > val_loss:
             best_val_loss = val_loss
             
-            torch.save(encoder, "./models/re_encoder.pth")
-            torch.save(decoder, "./models/re_decoder.pth")
+            torch.save(encoder, "./models/reconstruction/re_encoder.pth")
+            torch.save(decoder, "./models/reconstruction/re_decoder.pth")
 
         if best_kl_loss > val_loss:
             best_val_loss = val_loss
             
-            torch.save(encoder, "./models/kl_encoder.pth")
-            torch.save(decoder, "./models/kl_decoder.pth")
+            torch.save(encoder, "./models/kl/kl_encoder.pth")
+            torch.save(decoder, "./models/kl/kl_decoder.pth")
     
     '''
     high = vocab["color"]
