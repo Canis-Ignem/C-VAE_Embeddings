@@ -25,6 +25,8 @@ args = vars(parser.parse_args())
 def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
     
     best_val_loss = 10000000
+    best_kl_loss = 10000000
+    best_re_loss = 10000000
     val_reconstruct_loss = 0    
     val_kl_loss = 0             
     val_loss = 0 
@@ -81,6 +83,18 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
             
             torch.save(encoder, "./models/encoder.pth")
             torch.save(decoder, "./models/decoder.pth")
+
+        if best_re_loss > val_loss:
+            best_val_loss = val_loss
+            
+            torch.save(encoder, "./models/re_encoder.pth")
+            torch.save(decoder, "./models/re_decoder.pth")
+
+        if best_kl_loss > val_loss:
+            best_val_loss = val_loss
+            
+            torch.save(encoder, "./models/kl_encoder.pth")
+            torch.save(decoder, "./models/kl_decoder.pth")
     
     '''
     high = vocab["color"]
