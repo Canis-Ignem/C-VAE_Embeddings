@@ -82,8 +82,8 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
             torch.save(encoder, "./models/encoder.pth")
             torch.save(decoder, "./models/decoder.pth")
     
-    high = vocab["high"]
-    tall = vocab["tall"]
+    high = vocab["color"]
+    tall = vocab["blue"]
     
     high_tensor = torch.zeros( (1,len(vocab), 1) )
     high_tensor[0][high][0] = 1
