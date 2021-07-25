@@ -62,6 +62,7 @@ def get_data(data_set):
         
     else:
         train_iter = WikiText103(split='train')
+        
         vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=["<unk>"])
         vocab.set_default_index(vocab["<unk>"])
 
@@ -78,18 +79,24 @@ def get_data(data_set):
     return train_data, val_data, test_data, vocab
 
 '''
+train_iter = WikiText2(split='train')
+
+print(train_iter)
+for sent in train_iter:
+    print(sent)
+    break
+
+
+
 train, val, _, l = get_data('2')
-print(train.shape)
-print(train.max())
-print(len(l))
-print(l["blue"])
+print(train[:5])
 
 x , y = get_batch(train, 0)
 
-print(x)
-print(y)
+print(x[:5])
+print(y[:5])
 x , y = get_batch(train, 1)
-print(x)
+print(x[:5])
 
 input = torch.zeros((batch_size,len(l),1))
 out = torch.zeros((batch_size,len(l),1))
