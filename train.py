@@ -64,7 +64,7 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
             #print(output_data.shape)
             #print(output.shape)
             
-            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.detach().to(device), reduction='sum')
+            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.detach().to(device), reduction='mean')
             val_reconstruct_loss += reconstruction_loss.item()
             
             q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
@@ -144,7 +144,7 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             #print(output_data.shape)
             #print(output.shape)
              
-            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.to(device), reduction='sum')
+            reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.to(device), reduction='mean')
             reconstruct_loss += reconstruction_loss.item()
             
             #print((z_logvar / 2).exp().to(device))
