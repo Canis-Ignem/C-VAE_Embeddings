@@ -109,7 +109,7 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
         train_loss = 0          #total train loss(reconstruction + 2*kl loss)
         encoder.train()
         decoder.train()
-        print("EPOCH: {}\n".format(epoch))
+        print("EPOCH: {}/{}\n".format(epoch, epochs))
         for i in tqdm( range(0, train_set.size(0) -1 ) ):
             
             prior = D.Normal(torch.zeros(emb_size,).to(device), torch.ones(emb_size,).to(device))
