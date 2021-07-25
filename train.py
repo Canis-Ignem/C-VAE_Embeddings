@@ -140,7 +140,6 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
             #print(z.shape)
             
-            q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
             output_data = decoder(z.unsqueeze(1).to(device)).squeeze(0)
             #print(output_data.shape)
             #print(output.shape)
@@ -148,7 +147,7 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.to(device), size_average=False)
             reconstruct_loss += reconstruction_loss.item()
             
-            q = D.Normal(z_mu.to(device), (z_logvar.to(device) / 2).exp())
+            q = D.Normal( z_mu.to(device), (z_logvar / 2).exp().to(device) )
             kld_loss = D.kl_divergence(q, prior).sum()
             kl_loss += kld_loss.item()
             
