@@ -82,6 +82,7 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
             torch.save(encoder, "./models/encoder.pth")
             torch.save(decoder, "./models/decoder.pth")
     
+    '''
     high = vocab["color"]
     tall = vocab["blue"]
     
@@ -97,7 +98,7 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
     high_emb = get_embedding(high_op, prior, device)
     tall_emb = get_embedding(tall_op, prior, device)
     print( F.cosine_similarity(high_emb, tall_emb) )
-
+    '''
 
 def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = 5):
     
