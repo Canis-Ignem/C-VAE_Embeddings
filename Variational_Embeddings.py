@@ -29,6 +29,6 @@ def encode_word(word):
     return z
 
 
-print(encode_word("cat"))
+print(encode_word("cat").size())
     
     
