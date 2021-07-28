@@ -15,13 +15,13 @@ def encode_word(word):
     
     
     prior = D.Normal(torch.zeros(512,).to(device), torch.ones(512,).to(device))
-    x = torch.zeros( (1,len(VOCAB), 1) )
+    x = torch.zeros( (2,len(VOCAB), 1) )
     
     x[0][VOCAB[word]][0] = 1
     out = ENCODER(x)
     
-    z_mu = out[:, 0, :]
-    z_logvar = out[:, 1, :]         
+    z_mu = out[0, 0, :]
+    z_logvar = out[0, 1, :]         
     epsilon = prior.sample()
     
     z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
