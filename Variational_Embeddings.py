@@ -7,21 +7,22 @@ import torch
 #UTILS
 from torchsummary import summary
 
-
-ENCODER = torch.load("models/encoder.pth")
-VOCAB = torch.load("models/vocab.pth")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+ENCODER = torch.load("models/encoder.pth").to(device)
+VOCAB = torch.load("models/vocab.pth").to(device)
+
 def encode_word(word):
     
     
     prior = D.Normal(torch.zeros(512,).to(device), torch.ones(512,).to(device))
-    x = torch.zeros( (2,len(VOCAB), 1) )
+    x = torch.zeros( (2,len(VOCAB), 1) ).to(device)
     
     x[0][VOCAB[word]][0] = 1
     out = ENCODER(x)
     
     z_mu = out[0, 0, :]
-    z_logvar = out[0, 1, :]         
+    z_logvar = out[:, 1, :]         
     epsilon = prior.sample()
     
     z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
