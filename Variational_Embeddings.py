@@ -52,6 +52,7 @@ def encode_sentence(sentence):
     epsilon = prior.sample()
     
     z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
+    z = z.mean(dim=0)
     return z
 
 
