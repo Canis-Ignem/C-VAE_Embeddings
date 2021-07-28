@@ -1,23 +1,9 @@
 #TORCH
-from torchtext import data, datasets
-
-#SPACY
-from spacy.tokenizer import Tokenizer
-from spacy.lang.en import English
-
-#UTILS
-import pandas as pd
-import numpy as np
-import torchtext
-
-
-import io
 import torch
-from torchtext import vocab
 from torchtext.datasets import WikiText103, WikiText2
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
-from collections import Counter
+
 
 bptt = 35
 batch_size = 1000

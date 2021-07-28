@@ -1,7 +1,6 @@
 #TORCH
-from torch.nn import Linear, ReLU, CrossEntropyLoss, Sequential, Conv1d, MaxPool2d, Module, Softmax, BatchNorm1d, Dropout, LeakyReLU, Sigmoid
+from torch.nn import Sequential, Conv1d, Module, BatchNorm1d, Dropout, LeakyReLU, Sigmoid
 from torch import nn
-import torch
 
 #UTILS
 from torchsummary import summary

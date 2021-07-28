@@ -1,17 +1,17 @@
-from torch._C import device
-from model import Encoder, Decoder
-from torchvision import transforms
+#TORCH
 from torchsummary import summary
 import torch.nn.functional as F
 import torch.distributions as D
 import torch.optim as optim
-import data_handler as dh
-from tqdm import tqdm
-import torch.nn as nn
-import torchvision
-import argparse
 import torch
 
+#UTILS
+from tqdm import tqdm
+import argparse
+
+#COMPONENTS
+from model import Encoder, Decoder
+import data_handler as dh
 
 parser = argparse.ArgumentParser(description="C-VAE")
 parser.add_argument('--data', metavar = 'd', type = str, required = False, default='2')
