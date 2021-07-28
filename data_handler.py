@@ -13,6 +13,7 @@ import torchtext
 
 import io
 import torch
+from torchtext import vocab
 from torchtext.datasets import WikiText103, WikiText2
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
@@ -77,6 +78,14 @@ def get_data(data_set):
         test_data = to_batches(test_data, val_batch_size)
         
     return train_data, val_data, test_data, vocab
+
+train, val, _, voc = get_data('2')
+print(voc["blue"])
+torch.save(voc, "models/vocab.pth")
+
+voc = torch.load("models/vocab.pth")
+
+print(voc["blue"])
 
 '''
 train_iter = WikiText2(split='train')
