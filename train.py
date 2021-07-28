@@ -30,9 +30,7 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
     val_reconstruct_loss = 0    
     val_kl_loss = 0             
     val_loss = 0 
-    
-    
-    
+
     with torch.no_grad():
         
         print("VALIDATING: \n")
@@ -49,22 +47,14 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
                 output[j][y[j]][0] = 1
             
             encoded_op = encoder(input.to(device)) 
-            #print(encoded_op.shape)
             
             z_mu = encoded_op[:, 0, :]
             z_logvar = encoded_op[:, 1, :]      
             epsilon = prior.sample()
             
-            #print(epsilon.shape)
-            #print(z_mu.shape)
-            #print(z_logvar.shape)
-            
             z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
-            #print(z.shape)
             
             output_data = decoder( z.unsqueeze(1).to(device)).squeeze(0) 
-            #print(output_data.shape)
-            #print(output.shape)
             
             reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.detach().to(device), reduction='mean')
             val_reconstruct_loss += reconstruction_loss.item()
@@ -79,35 +69,38 @@ def validate(epoch, encoder, emb_size, decoder, device, val_set, vocab):
         print("Epoch: {} \t val_Loss: {} \t val_reconstruction_loss: {} \t val_KL Loss: \t:  {} \n".format(epoch, val_loss, val_reconstruct_loss, val_kl_loss))
         
         if best_val_loss > val_loss:
+            
             best_val_loss = val_loss
             
-            torch.save(encoder, "./models/encoder.pth")
-            torch.save(decoder, "./models/decoder.pth")
+            torch.save(encoder, "./models/encoder103.pth")
+            torch.save(decoder, "./models/decoder103.pth")
 
         if best_re_loss > val_loss:
+            
             best_val_loss = val_loss
             
-            torch.save(encoder, "./models/reconstruction/re_encoder.pth")
-            torch.save(decoder, "./models/reconstruction/re_decoder.pth")
+            torch.save(encoder, "./models/reconstruction/re_encoder103.pth")
+            torch.save(decoder, "./models/reconstruction/re_decoder103.pth")
 
         if best_kl_loss > val_loss:
+            
             best_val_loss = val_loss
             
-            torch.save(encoder, "./models/kl/kl_encoder.pth")
-            torch.save(decoder, "./models/kl/kl_decoder.pth")
+            torch.save(encoder, "./models/kl/kl_encoder103.pth")
+            torch.save(decoder, "./models/kl/kl_decoder103.pth")
     
 
 def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, val_set, vocab, epochs = 5):
-    
-    
-    
+     
     for epoch in range(epochs):
-        reconstruct_loss = 0    #total reconstruction loss
-        kl_loss = 0             #total kl divergence loss
-        train_loss = 0          #total train loss(reconstruction + 2*kl loss)
+        
+        reconstruct_loss = 0
+        kl_loss = 0
+        train_loss = 0
         encoder.train()
         decoder.train()
         print("EPOCH: {}/{}\n".format(epoch, epochs))
+        
         for i in tqdm( range(0, train_set.size(0) -1 ) ):
             
             prior = D.Normal(torch.zeros(emb_size,).to(device), torch.ones(emb_size,).to(device))
@@ -115,8 +108,7 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             
             input = torch.zeros( (dh.batch_size,len(vocab), 1) )
             output = torch.zeros( (dh.batch_size,len(vocab), 1) )
-            
-            
+                   
             for j in range(dh.batch_size):
                 input[j][x[j]][0] = 1
                 output[j][y[j]][0] = 1
@@ -124,30 +116,18 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             optimizer.zero_grad()
             
             encoded_op = encoder(input.to(device)) 
-            #print(encoded_op.shape)
             
             z_mu = encoded_op[:, 0, :]
             z_logvar = encoded_op[:, 1, :]
             epsilon = prior.sample()
             
-            #print(epsilon.shape)
-            #print(z_mu.shape)
-            #print(z_logvar.shape)
-            #print(type(z_logvar))
-            
             z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
-            #print(z.shape)
             
             output_data = decoder(z.unsqueeze(1).to(device)).squeeze(0)
-            #print(output_data.shape)
-            #print(output.shape)
-             
+
             reconstruction_loss = F.binary_cross_entropy(output_data.to(device), output.to(device), reduction='mean')
             reconstruct_loss += reconstruction_loss.item()
-            
-            #print((z_logvar / 2).exp().to(device))
-            #print(type((z_logvar / 2).exp().to(device)))
-            
+
             q = D.Normal( z_mu.to(device), (z_logvar / 2).exp().to(device) )
             kld_loss = D.kl_divergence(q, prior).sum()
             kl_loss += kld_loss.item()
@@ -164,15 +144,6 @@ def train(optimizer, scheduler, device, emb_size, encoder, decoder, train_set, v
             print("Epoch: {} \t Loss: {} \t reconstruction_loss: {} \t KL Loss: \t:  {}  \n".format(epoch, train_loss, reconstruct_loss, kl_loss))
             
             validate(epoch, encoder, emb_size, decoder, device, val_set, vocab)
-                
-
-def get_embedding(encoded_op, prior, device):
-    
-    z_mu = encoded_op[:, 0, :]
-    z_logvar = encoded_op[:, 1, :]         
-    epsilon = prior.sample()
-    z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
-    return z
 
 def main():
     
@@ -191,8 +162,6 @@ def main():
     
     print(summary(encoder,(len(vocab),1)))
     print(summary(decoder,(1,emb_size)))
-
-    
 
     optimizer = optim.Adam(list(encoder.parameters())+list(decoder.parameters()), lr = args['lr'], betas=(0.5, 0.999))
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.95)
