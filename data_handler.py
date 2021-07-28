@@ -79,6 +79,8 @@ def get_data(data_set):
         
     return train_data, val_data, test_data, vocab
 
+
+'''
 train, val, _, voc = get_data('2')
 print(voc["blue"])
 torch.save(voc, "models/vocab.pth")
@@ -87,7 +89,7 @@ voc = torch.load("models/vocab.pth")
 
 print(voc["blue"])
 
-'''
+
 train_iter = WikiText2(split='train')
 
 print(train_iter)

@@ -6,10 +6,17 @@ import torch
 from torchsummary import summary
 
 
-ENCODER = torch.load("models/encoder.py")
-
+ENCODER = torch.load("models/encoder.pth")
+VOCAB = torch.load("models/vocab.pth")
 
 def encode_word(word):
-    return
+    
+    x = torch.tensor((1,len(VOCAB,1))).cuda()
+    x[0][VOCAB[word]][0] = 1
+    out = ENCODER(x)
+    return out
+
+
+print(encode_word("cat"))
     
     
