@@ -22,7 +22,7 @@ def encode_word(word):
     out = ENCODER(x)
     
     z_mu = out[0, 0, :]
-    z_logvar = out[:, 1, :]         
+    z_logvar = out[0, 1, :]         
     epsilon = prior.sample()
     
     z = z_mu.to(device) + epsilon.to(device) * (z_logvar.to(device) / 2).exp()
